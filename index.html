@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAUMAIL - Messages Worth Waiting For</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-wood: #a08560;
+            --light-wood: #b89b72;
+            --deep-shadow: #7a6548;
+            --leather: #5e4c35;
+            --crisp-paper: #fdfbf7;
+            --aged-folder: #e0d5c1;
+            --map-bg: #e5e7eb;
+            --archive-paper: #f0e6d2;
+            --terminal-green: #a3e635;
+            --alert-red: #ef4444;
+            --tech-blue: #60a5fa;
+            --ink: #2d2d2d;
+            --valentine-pink: #e88da4;
+            --valentine-rose: #d4637e;
+            --valentine-blush: #fce4ec;
+            --valentine-deep: #b8406a;
+            --hero-bg: #f0e6d2;
+            --grid-line: #ddd0ba;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--deep-shadow);
+            color: var(--ink);
+            font-family: 'VT323', monospace;
+            font-size: 22px;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        @keyframes floatSlow {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-14px) rotate(2deg);
+            }
+        }
+
+        @keyframes floatDrift {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            25% {
+                transform: translate(6px, -10px) rotate(3deg);
+            }
+
+            50% {
+                transform: translate(-4px, -16px) rotate(-2deg);
+            }
+
+            75% {
+                transform: translate(5px, -6px) rotate(2deg);
+            }
+
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+        }
+
+        @keyframes walk {
+            0% {
+                transform: translateY(0);
+            }
+
+            25% {
+                transform: translateY(-1px) rotate(2deg);
+            }
+
+            50% {
+                transform: translateY(0);
+            }
+
+            75% {
+                transform: translateY(-1px) rotate(-2deg);
+            }
+
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes heartFloatG {
+            0% {
+                transform: translateY(100vh) scale(0.6);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.07;
+            }
+
+            90% {
+                opacity: 0.07;
+            }
+
+            100% {
+                transform: translateY(-10vh) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* ===== GLOBAL FLOATING HEARTS ===== */
+        .hearts-bg {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .fh {
+            position: absolute;
+            opacity: 0.07;
+            animation: heartFloatG linear infinite;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: var(--leather);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 0 0 var(--ink);
+        }
+
+        .nav-logo {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            color: var(--valentine-pink);
+            text-decoration: none;
+            letter-spacing: 3px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 8px;
+            color: var(--aged-folder);
+            text-decoration: none;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--valentine-pink);
+        }
+
+        .nav-cta-btn {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 8px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: var(--valentine-pink);
+            color: var(--crisp-paper);
+            padding: 10px 16px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.1s;
+            box-shadow: -2px 0 0 0 var(--ink), 2px 0 0 0 var(--ink), 0 -2px 0 0 var(--ink), 0 2px 0 0 var(--ink);
+        }
+
+        .nav-cta-btn:hover {
+            transform: translateY(1px);
+            background: var(--valentine-rose);
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 100px 24px 60px;
+            position: relative;
+            z-index: 1;
+            /* Notebook grid background */
+            background-color: var(--hero-bg);
+            background-image:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 32px 32px;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Pixel envelope */
+        .hero-envelope {
+            width: 120px;
+            height: 90px;
+            position: relative;
+            margin: 0 auto 28px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .envelope-back {
+            position: absolute;
+            bottom: 0;
+            width: 120px;
+            height: 72px;
+            background: var(--valentine-pink);
+            box-shadow: -4px 0 0 0 var(--ink), 4px 0 0 0 var(--ink), 0 -4px 0 0 var(--ink), 0 4px 0 0 var(--ink);
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 60px solid transparent;
+            border-right: 60px solid transparent;
+            border-top: 44px solid var(--valentine-rose);
+            filter: drop-shadow(0 -2px 0 var(--ink));
+        }
+
+        .envelope-inner-v {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 60px solid transparent;
+            border-right: 60px solid transparent;
+            border-bottom: 40px solid var(--valentine-deep);
+        }
+
+        .envelope-heart-icon {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(28px, 5vw, 52px);
+            color: var(--valentine-deep);
+            margin-bottom: 16px;
+            line-height: 1.4;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.08);
+        }
+
+        .hero-sub-1 {
+            font-family: 'VT323', monospace;
+            font-size: clamp(22px, 2.5vw, 28px);
+            color: var(--ink);
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+
+        .hero-sub-2 {
+            font-family: 'VT323', monospace;
+            font-size: clamp(24px, 3vw, 32px);
+            color: var(--deep-shadow);
+            margin-bottom: 48px;
+        }
+
+        /* ===== COUNTDOWN ===== */
+        .countdown-wrapper {
+            margin-bottom: 44px;
+            min-height: 25vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .countdown-label {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            color: var(--ink);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            opacity: 0.7;
+        }
+
+        .countdown {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cd-item {
+            background: var(--leather);
+            padding: 24px 28px;
+            min-width: 100px;
+            text-align: center;
+            box-shadow: -4px 0 0 0 var(--ink), 4px 0 0 0 var(--ink), 0 -4px 0 0 var(--ink), 0 4px 0 0 var(--ink);
+        }
+
+        .cd-num {
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(28px, 4vw, 40px);
+            color: var(--terminal-green);
+            display: block;
+        }
+
+        .cd-unit {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 9px;
+            color: var(--aged-folder);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 10px;
+            display: block;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn-primary {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: var(--valentine-pink);
+            color: var(--crisp-paper);
+            padding: 22px 40px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            line-height: 1.6;
+            transition: transform 0.1s;
+            box-shadow: -4px 0 0 0 var(--ink), 4px 0 0 0 var(--ink), 0 -4px 0 0 var(--ink), 0 4px 0 0 var(--ink);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(2px);
+            background: var(--valentine-rose);
+        }
+
+        .btn-primary:active {
+            transform: translateY(4px);
+        }
+
+        .btn-sub-text {
+            font-family: 'VT323', monospace;
+            font-size: 22px;
+            color: var(--deep-shadow);
+            margin-top: 12px;
+            opacity: 0.8;
+        }
+
+        /* ===== HERO SCENE ELEMENTS (cupid haus, clouds, hearts, mail) ===== */
+        .hero-scene-el {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .scene-cloud {
+            opacity: 0.5;
+        }
+
+        .scene-cupid {
+            animation: floatDrift ease-in-out infinite;
+        }
+
+        .scene-heart {
+            animation: floatSlow ease-in-out infinite;
+            opacity: 0.35;
+        }
+
+        .scene-mail {
+            animation: floatDrift ease-in-out infinite;
+            opacity: 0.3;
+        }
+
+        /* ===== SECTIONS ===== */
+        section {
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-inner {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        .section-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(14px, 2.5vw, 20px);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+            margin-bottom: 48px;
+            line-height: 1.8;
+        }
+
+        /* ===== HAU PARADE ===== */
+        .hau-parade {
+            background: var(--dark-wood);
+            padding: 20px 0;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 -4px 0 0 var(--ink), 0 4px 0 0 var(--ink);
+        }
+
+        .hau-parade-track {
+            display: flex;
+            gap: 52px;
+            animation: paradeMove 28s linear infinite;
+            width: max-content;
+        }
+
+        @keyframes paradeMove {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .parade-hau {
+            flex-shrink: 0;
+            animation: float 2.5s ease-in-out infinite;
+        }
+
+        /* ===== HOW IT WORKS ===== */
+        .how-section {
+            background: var(--aged-folder);
+        }
+
+        .how-section .section-title {
+            color: var(--ink);
+        }
+
+        .step-list {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .step-card {
+            background: var(--crisp-paper);
+            padding: 28px 32px;
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+            box-shadow: -4px 0 0 0 var(--ink), 4px 0 0 0 var(--ink), 0 -4px 0 0 var(--ink), 0 4px 0 0 var(--ink);
+        }
+
+        .step-num {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 28px;
+            color: var(--valentine-rose);
+            min-width: 48px;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .step-body h3 {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 11px;
+            letter-spacing: 1px;
+            color: var(--ink);
+            margin-bottom: 12px;
+            line-height: 1.8;
+        }
+
+        .step-body p {
+            font-family: 'VT323', monospace;
+            font-size: 24px;
+            color: var(--deep-shadow);
+            line-height: 1.4;
+        }
+
+        .step-note {
+            background: var(--archive-paper);
+            padding: 20px 28px;
+            margin-top: 24px;
+            box-shadow: -2px 0 0 0 var(--dark-wood), 2px 0 0 0 var(--dark-wood), 0 -2px 0 0 var(--dark-wood), 0 2px 0 0 var(--dark-wood);
+        }
+
+        .step-note p {
+            font-family: 'VT323', monospace;
+            font-size: 22px;
+            color: var(--deep-shadow);
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        /* Step toggles */
+        .step-toggle {
+            background: var(--crisp-paper);
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: -4px 0 0 0 var(--ink), 4px 0 0 0 var(--ink), 0 -4px 0 0 var(--ink), 0 4px 0 0 var(--ink);
+        }
+
+        .step-toggle:hover {
+            background: #f8f3eb;
+        }
+
+        .step-header {
+            padding: 22px 28px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            user-select: none;
+        }
+
+        .step-num {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 20px;
+            color: var(--valentine-rose);
+            min-width: 40px;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .step-label {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 13px;
+            color: var(--ink);
+            letter-spacing: 1px;
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        .step-arrow {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 16px;
+            color: var(--valentine-rose);
+            flex-shrink: 0;
+            transition: transform 0.2s;
+        }
+
+        .step-toggle.open .step-arrow {
+            transform: rotate(45deg);
+        }
+
+        .step-detail {
+            padding: 0 28px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, padding 0.35s ease;
+        }
+
+        .step-toggle.open .step-detail {
+            padding: 0 28px 22px;
+            max-height: 400px;
+        }
+
+        .step-detail p {
+            font-family: 'VT323', monospace;
+            font-size: 24px;
+            color: var(--deep-shadow);
+            line-height: 1.4;
+        }
+
+        /* ===== WHY ===== */
+        .why-section {
+            background: var(--dark-wood);
+        }
+
+        .why-card {
+            background-color: var(--crisp-paper);
+            background-image: repeating-linear-gradient(transparent, transparent 31px, #e5e7eb 31px, #e5e7eb 32px);
+            padding: 40px 36px;
+            max-width: 680px;
+            margin: 0 auto;
+            box-shadow: -4px 0 0 0 var(--ink), 4px 0 0 0 var(--ink), 0 -4px 0 0 var(--ink), 0 4px 0 0 var(--ink);
+        }
+
+        .why-card p {
+            font-family: 'VT323', monospace;
+            font-size: 26px;
+            color: var(--ink);
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .why-card p:last-child {
+            margin-bottom: 0;
+        }
+
+        .why-card .em {
+            color: var(--valentine-deep);
+        }
+
+        .why-card .big {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            color: var(--ink);
+            line-height: 2.2;
+            display: block;
+            margin: 24px 0;
+            letter-spacing: 1px;
+        }
+
+        /* ===== SHARE (merged into CTA) ===== */
+        .cta-share {
+            margin-top: 36px;
+            padding-top: 28px;
+            border-top: 2px dashed rgba(255, 255, 255, 0.15);
+        }
+
+        .cta-share-text {
+            font-family: 'VT323', monospace;
+            font-size: 24px;
+            color: var(--aged-folder);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .share-btn {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: var(--crisp-paper);
+            color: var(--ink);
+            padding: 14px 28px;
+            cursor: pointer;
+            display: inline-block;
+            transition: transform 0.1s;
+            border: none;
+            box-shadow: -2px 0 0 0 var(--ink), 2px 0 0 0 var(--ink), 0 -2px 0 0 var(--ink), 0 2px 0 0 var(--ink);
+        }
+
+        .share-btn:hover {
+            transform: translateY(1px);
+            background: var(--aged-folder);
+        }
+
+        /* Show more FAQ button */
+        .show-more-btn {
+            font-family: 'VT323', monospace;
+            font-size: 24px;
+            background: var(--valentine-rose);
+            color: var(--crisp-paper);
+            padding: 12px 24px;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.1s;
+            box-shadow: -2px 0 0 0 var(--ink), 2px 0 0 0 var(--ink), 0 -2px 0 0 var(--ink), 0 2px 0 0 var(--ink);
+        }
+
+        .show-more-btn:hover {
+            transform: translateY(1px);
+            background: var(--valentine-deep);
+        }
+
+        /* ===== FAQ ===== */
+        .faq-section {
+            background: var(--deep-shadow);
+        }
+
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--crisp-paper);
+            overflow: hidden;
+            box-shadow: -4px 0 0 0 var(--ink), 4px 0 0 0 var(--ink), 0 -4px 0 0 var(--ink), 0 4px 0 0 var(--ink);
+        }
+
+        .faq-q {
+            font-family: 'VT323', monospace;
+            font-size: 26px;
+            color: var(--ink);
+            padding: 18px 22px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            line-height: 1.4;
+            user-select: none;
+        }
+
+        .faq-q:hover {
+            background: rgba(0, 0, 0, 0.03);
+        }
+
+        .faq-toggle {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            color: var(--valentine-rose);
+            flex-shrink: 0;
+            transition: transform 0.2s;
+        }
+
+        .faq-item.open .faq-toggle {
+            transform: rotate(45deg);
+        }
+
+        .faq-a {
+            font-family: 'VT323', monospace;
+            font-size: 24px;
+            color: var(--deep-shadow);
+            padding: 0 22px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, padding 0.35s ease;
+            line-height: 1.5;
+        }
+
+        .faq-item.open .faq-a {
+            padding: 0 22px 20px;
+            max-height: 500px;
+        }
+
+        /* ===== FINAL CTA ===== */
+        .final-cta {
+            background: var(--leather);
+            text-align: center;
+        }
+
+        .final-cta .section-title {
+            color: var(--valentine-pink);
+            font-size: clamp(18px, 3.5vw, 30px);
+            margin-bottom: 36px;
+        }
+
+        .cta-dates {
+            font-family: 'VT323', monospace;
+            font-size: 24px;
+            color: var(--aged-folder);
+            margin-top: 32px;
+            line-height: 2;
+        }
+
+        .cta-dates .hl {
+            color: var(--terminal-green);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: var(--leather);
+            padding: 36px 24px;
+            text-align: center;
+            box-shadow: 0 -4px 0 0 var(--ink);
+        }
+
+        .footer-made {
+            font-family: 'VT323', monospace;
+            font-size: 24px;
+            color: var(--aged-folder);
+            margin-bottom: 16px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .footer-links a {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 8px;
+            color: var(--valentine-pink);
+            text-decoration: none;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .footer-links a:hover {
+            color: var(--crisp-paper);
+        }
+
+        .footer-copy {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 7px;
+            color: var(--dark-wood);
+            letter-spacing: 1px;
+        }
+
+        /* ===== SCROLL FADE ===== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .navbar {
+                padding: 10px 16px;
+            }
+
+            .hero {
+                padding: 80px 16px 48px;
+            }
+
+            .section-inner {
+                padding: 60px 16px;
+            }
+
+            .step-card {
+                flex-direction: column;
+                gap: 12px;
+                padding: 20px;
+            }
+
+            .why-card {
+                padding: 28px 24px;
+            }
+
+            .why-card p {
+                font-size: 22px;
+            }
+
+            .btn-primary {
+                font-size: 11px;
+                padding: 18px 28px;
+            }
+
+            .cd-item {
+                min-width: 72px;
+                padding: 18px 16px;
+            }
+
+            .hero-scene-el {
+                transform: scale(0.6) !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .countdown {
+                gap: 8px;
+            }
+
+            .cd-item {
+                min-width: 60px;
+                padding: 14px 10px;
+            }
+
+            .cd-num {
+                font-size: 20px;
+            }
+
+            .cd-unit {
+                font-size: 7px;
+            }
+
+            .hero-scene-el {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="hearts-bg" id="heartsBg"></div>
+
+    <nav class="navbar">
+        <a href="#" class="nav-logo">HAUMAIL</a>
+        <ul class="nav-links">
+            <li><a href="#how">HOW IT WORKS</a></li>
+            <li><a href="#why">WHY</a></li>
+            <li><a href="#faq">FAQ</a></li>
+        </ul>
+        <a href="#" class="nav-cta-btn" onclick="openSurvey(event)">COUNT ME IN!</a>
+    </nav>
+
+    <!-- ==================== HERO ==================== -->
+    <section class="hero" id="heroSection">
+        <div class="hero-content">
+            <div class="hero-envelope">
+                <div class="envelope-flap"></div>
+                <div class="envelope-back">
+                    <div class="envelope-inner-v"></div>
+                </div>
+                <div class="envelope-heart-icon">
+                    <svg width="28" height="26" viewBox="0 0 28 26" fill="none" style="image-rendering:pixelated;">
+                        <rect x="4" y="0" width="4" height="4" fill="#ef4444" />
+                        <rect x="8" y="0" width="4" height="4" fill="#ef4444" />
+                        <rect x="16" y="0" width="4" height="4" fill="#ef4444" />
+                        <rect x="20" y="0" width="4" height="4" fill="#ef4444" />
+                        <rect x="2" y="4" width="4" height="4" fill="#ef4444" />
+                        <rect x="6" y="4" width="4" height="4" fill="#ef4444" />
+                        <rect x="10" y="4" width="4" height="4" fill="#ef4444" />
+                        <rect x="14" y="4" width="4" height="4" fill="#ef4444" />
+                        <rect x="18" y="4" width="4" height="4" fill="#ef4444" />
+                        <rect x="22" y="4" width="4" height="4" fill="#ef4444" />
+                        <rect x="0" y="8" width="28" height="4" fill="#ef4444" />
+                        <rect x="2" y="12" width="24" height="4" fill="#ef4444" />
+                        <rect x="4" y="16" width="20" height="4" fill="#ef4444" />
+                        <rect x="8" y="20" width="12" height="4" fill="#ef4444" />
+                        <rect x="12" y="24" width="4" height="2" fill="#ef4444" />
+                    </svg>
+                </div>
+            </div>
+            <h1 class="hero-title">HAUMAIL</h1>
+            <p class="hero-sub-1">Messages worth waiting for.</p>
+            <p class="hero-sub-2">Your inbox is boring. Let's fix that.</p>
+            <div class="countdown-wrapper">
+                <p class="countdown-label">Until matches are revealed</p>
+                <div class="countdown">
+                    <div class="cd-item"><span class="cd-num" id="cd-d">00</span><span class="cd-unit">DAYS</span></div>
+                    <div class="cd-item"><span class="cd-num" id="cd-h">00</span><span class="cd-unit">HRS</span></div>
+                    <div class="cd-item"><span class="cd-num" id="cd-m">00</span><span class="cd-unit">MIN</span></div>
+                    <div class="cd-item"><span class="cd-num" id="cd-s">00</span><span class="cd-unit">SEC</span></div>
+                </div>
+            </div>
+            <a href="#" class="btn-primary" onclick="openSurvey(event)">COUNT ME IN!</a>
+            <div class="btn-sub-text">(1 minute survey)</div>
+        </div>
+    </section>
+
+    <!-- ==================== HAU PARADE ==================== -->
+    <div class="hau-parade">
+        <div class="hau-parade-track" id="paradeTrack"></div>
+    </div>
+
+    <!-- ==================== HOW IT WORKS ==================== -->
+    <section class="how-section" id="how">
+        <div class="section-inner">
+            <h2 class="section-title">How does this work?</h2>
+            <div class="step-list">
+                <div class="step-toggle fade-in" onclick="toggleStep(this)">
+                    <div class="step-header">
+                        <span class="step-num">1.</span>
+                        <span class="step-label">Take the survey</span>
+                        <span class="step-arrow">+</span>
+                    </div>
+                    <div class="step-detail">
+                        <p>Tell us about yourself and don't overthink it. The questions are fun, we promise.</p>
+                    </div>
+                </div>
+
+                <div class="step-toggle fade-in" onclick="toggleStep(this)">
+                    <div class="step-header">
+                        <span class="step-num">2.</span>
+                        <span class="step-label">Get matched on Valentine's Day</span>
+                        <span class="step-arrow">+</span>
+                    </div>
+                    <div class="step-detail">
+                        <p>Our specially crafted algorithm pairs you with 5-10 pen pals based on compatibility. Check
+                            your email Feb 14 at 6pm ET for the results!</p>
+                    </div>
+                </div>
+
+                <div class="step-toggle fade-in" onclick="toggleStep(this)">
+                    <div class="step-header">
+                        <span class="step-num">3.</span>
+                        <span class="step-label">Meet your courier creatures</span>
+                        <span class="step-arrow">+</span>
+                    </div>
+                    <div class="step-detail">
+                        <p>For every pen pal connection, you're assigned a Hau: a small digital courier that delivers
+                            messages between you and that person. The Hau also randomly chooses who sends the first
+                            message, so you don't have to worry about initiating :)</p>
+                    </div>
+                </div>
+
+                <div class="step-toggle fade-in" onclick="toggleStep(this)">
+                    <div class="step-header">
+                        <span class="step-num">4.</span>
+                        <span class="step-label">Send… then wait</span>
+                        <span class="step-arrow">+</span>
+                    </div>
+                    <div class="step-detail">
+                        <p>Compose your message using voice (~ooh la la~) or text, hit send, and watch your Hau travel
+                            to your pen pal on the map! Soon enough, a message may find its way back to you ;)</p>
+                        <p style="margin-top:12px;font-style:italic;opacity:0.8;">Note: Keep in mind Haus are quite
+                            small and cannot quantum travel, so it can only be in one place at a time.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== WHY ==================== -->
+    <section class="why-section" id="why">
+        <div class="section-inner">
+            <h2 class="section-title" style="color:var(--crisp-paper);">Why would I want slow messages?</h2>
+            <div class="why-card fade-in">
+                <p style="color:var(--valentine-rose);">Okay, hear me out: instant texting kind of sucks now.</p>
+                <p>When was the last time you wrote something and actually looked forward to the response?</p>
+                <p>We're technically more connected than ever, yet somehow it's harder to make (and keep) friends.
+                    Especially long-distance ones.</p>
+                <p style="color:var(--valentine-rose);">That's why we created Haumail.</p>
+                <p>Connection should feel like something worth waiting for.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FAQ (top 5 + show more) ==================== -->
+    <section class="faq-section" id="faq">
+        <div class="section-inner">
+            <h2 class="section-title" style="color:var(--crisp-paper);">FAQ</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-q" onclick="toggleFaq(this)"><span>What is Haumail?</span><span
+                            class="faq-toggle">+</span></div>
+                    <div class="faq-a">Haumail is a slow messaging platform where your messages are carried by digital
+                        courier creatures (Haus) between you and your pen pals. It's like if snail mail and texting had
+                        a wholesome baby.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q" onclick="toggleFaq(this)"><span>What is a Hau?</span><span
+                            class="faq-toggle">+</span></div>
+                    <div class="faq-a">The word "hau" comes from Māori culture. It's the spirit of the gift, the
+                        invisible thread that keeps people connected and creates a cycle of care.<br><br>In Haumail,
+                        your Hau is that spirit made visible. It's a tiny creature that carries your words between you
+                        and your pen pal. Each pen pal pair gets their own unique Hau with a name, personality, and
+                        backstory.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q" onclick="toggleFaq(this)"><span>Is this free?</span><span
+                            class="faq-toggle">+</span></div>
+                    <div class="faq-a">Yes!</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q" onclick="toggleFaq(this)"><span>How long do messages take?</span><span
+                            class="faq-toggle">+</span></div>
+                    <div class="faq-a">Could be anywhere from hours to days. It depends on the real-world distance
+                        between you and your pen pal (and how athletic your Hau is…). The anticipation makes opening
+                        each message feel like a little gift &lt;3</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q" onclick="toggleFaq(this)"><span>Is this a dating app?</span><span
+                            class="faq-toggle">+</span></div>
+                    <div class="faq-a">No. Think of it more as a pen pal system. But if you end up falling in love with
+                        one of your matches… make sure to invite us to the wedding ^_^</div>
+                </div>
+            </div>
+
+            <!-- Show more FAQs -->
+            <div id="moreFaqs" style="display:none;">
+                <div class="faq-list" style="margin-top:12px;">
+                    <div class="faq-item">
+                        <div class="faq-q" onclick="toggleFaq(this)"><span>Who am I getting matched with?</span><span
+                                class="faq-toggle">+</span></div>
+                        <div class="faq-a">People from all over! Our algorithm matches you with 5-10 people based on
+                            your survey responses. You might get matched with someone in your city or someone 8000 miles
+                            away. Half the fun is the surprise ;)</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-q" onclick="toggleFaq(this)"><span>Can I send pictures/videos?</span><span
+                                class="faq-toggle">+</span></div>
+                        <div class="faq-a">What type of stuff are you trynna send you weirdo… (╭ರ_•́)<br><br>Ok for real
+                            though, you can send text messages and voice memos. That's it! We're keeping it simple.
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-q" onclick="toggleFaq(this)"><span>What if my match is weird/creepy?</span><span
+                                class="faq-toggle">+</span></div>
+                        <div class="faq-a">If someone is being inappropriate, stop messaging them, and contact us
+                            social@haumail.world and we'll handle it.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-q" onclick="toggleFaq(this)"><span>When does the survey close?</span><span
+                                class="faq-toggle">+</span></div>
+                        <div class="faq-a">February 13 at 6:00 PM EST. After that, we run the matching algorithm and
+                            you'll get your results on Valentine's Day at 6 PM.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-q" onclick="toggleFaq(this)"><span>Can I invite my friends directly
+                                too?</span><span class="faq-toggle">+</span></div>
+                        <div class="faq-a">Yes! Once you're in Haumail (after Feb 14), you can invite specific friends
+                            to be pen pals outside of the matching system.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-q" onclick="toggleFaq(this)"><span>What happens after Valentine's
+                                Day?</span><span class="faq-toggle">+</span></div>
+                        <div class="faq-a">Message your matches! Invite your friends! Your family! Haumail isn't just
+                            for Feb 14th. In fact, the whole point is to use it after Feb 14th.<br><br>We're still
+                            developing Haumail, so feel free to send us feedback, feature requests, or any other ideas
+                            by contacting social@haumail.world.</div>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align:center;margin-top:20px;">
+                <button class="show-more-btn" id="showMoreBtn" onclick="toggleMoreFaqs()">SHOW MORE</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FINAL CTA + SHARE (combined) ==================== -->
+    <section class="final-cta">
+        <div class="section-inner">
+            <h2 class="section-title" style="color:var(--valentine-pink);">Ready?</h2>
+            <a href="#" class="btn-primary" onclick="openSurvey(event)">COUNT ME IN!</a>
+            <div class="cta-dates">
+                <span>Survey closes <span class="hl">February 13 at 6 PM EST</span></span><br>
+                <span>Matches revealed <span class="hl">February 14 at 6 PM EST</span></span>
+            </div>
+            <div class="cta-share">
+                <p class="cta-share-text">More signups = better matches!</p>
+                <button class="share-btn" onclick="copyLink()">SHARE WITH YOUR FRIENDS!</button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p class="footer-made">Made with care 💌</p>
+        <div class="footer-links"><a href="mailto:social@haumail.world">social@haumail.world</a></div>
+        <p class="footer-copy">&copy; 2026 Haumail.</p>
+    </footer>
+
+    <script>
+        // ===========================
+        // HAU HEAD SVG — SQUARE HEAD, BIG EYES
+        // No body/legs. Rounded-square head.
+        // Tall antenna with varied tips.
+        // ===========================
+        function hauHeadSVG(opts = {}) {
+            const {
+                headColor = '#f5e6d0',
+                headLight = '#faf3e8',
+                headOutline = '#7a6048',
+                sproutColor = '#8ba65a',
+                eyeColor = '#2d2d2d',
+                antennaTip = 'leaf',
+                tipColor = '',
+                size = 56,
+                flip = false,
+                cupid = false, // adds tiny wings + bow
+            } = opts;
+
+            const tc = tipColor || sproutColor;
+            const t = flip ? `transform="scale(-1,1) translate(-${size},0)"` : '';
+            const cx = size * 0.50;
+            const cy = size * 0.58;
+            const hr = size * 0.30; // head half-size
+            const r = size * 0.06;  // corner radius for square
+
+            // Antenna tip
+            let tipHTML = '';
+            const tx = cx, ty = size * 0.10;
+
+            if (antennaTip === 'leaf') {
+                tipHTML = `<ellipse cx="${tx + 3}" cy="${ty}" rx="${size * 0.08}" ry="${size * 0.045}" fill="${tc}" transform="rotate(-35 ${tx + 3} ${ty})" stroke="${headOutline}" stroke-width="0.8"/>`;
+            } else if (antennaTip === 'heart') {
+                const s = size * 0.055;
+                tipHTML = `
+      <circle cx="${tx - s * 0.45}" cy="${ty - s * 0.3}" r="${s * 0.6}" fill="${tc}"/>
+      <circle cx="${tx + s * 0.45}" cy="${ty - s * 0.3}" r="${s * 0.6}" fill="${tc}"/>
+      <polygon points="${tx - s},${ty + s * 0.1} ${tx},${ty + s} ${tx + s},${ty + s * 0.1}" fill="${tc}"/>`;
+            } else if (antennaTip === 'cloud') {
+                tipHTML = `
+      <circle cx="${tx - 3}" cy="${ty + 1}" r="${size * 0.04}" fill="${tc}" opacity="0.9"/>
+      <circle cx="${tx + 3}" cy="${ty + 1}" r="${size * 0.04}" fill="${tc}" opacity="0.9"/>
+      <circle cx="${tx}" cy="${ty - 2}" r="${size * 0.05}" fill="${tc}" opacity="0.9"/>`;
+            } else if (antennaTip === 'star') {
+                const sr = size * 0.06;
+                const pts = [];
+                for (let i = 0; i < 5; i++) {
+                    const a1 = (Math.PI * 2 * i / 5) - Math.PI / 2;
+                    const a2 = a1 + Math.PI / 5;
+                    pts.push(`${tx + Math.cos(a1) * sr},${ty + Math.sin(a1) * sr}`);
+                    pts.push(`${tx + Math.cos(a2) * sr * 0.4},${ty + Math.sin(a2) * sr * 0.4}`);
+                }
+                tipHTML = `<polygon points="${pts.join(' ')}" fill="${tc}"/>`;
+            } else if (antennaTip === 'flower') {
+                const pr = size * 0.03;
+                for (let i = 0; i < 5; i++) {
+                    const a = Math.PI * 2 * i / 5;
+                    tipHTML += `<circle cx="${tx + Math.cos(a) * pr * 1.8}" cy="${ty + Math.sin(a) * pr * 1.8}" r="${pr}" fill="${tc}" opacity="0.85"/>`;
+                }
+                tipHTML += `<circle cx="${tx}" cy="${ty}" r="${pr * 0.8}" fill="#ffd700"/>`;
+            } else {
+                tipHTML = `<circle cx="${tx}" cy="${ty}" r="${size * 0.045}" fill="${tc}"/>`;
+            }
+
+            // Cupid wings + bow
+            let cupidHTML = '';
+            if (cupid) {
+                // Tiny pixel wings
+                cupidHTML = `
+      <!-- Left wing -->
+      <ellipse cx="${cx - hr - size * 0.06}" cy="${cy - size * 0.04}" rx="${size * 0.10}" ry="${size * 0.14}" fill="rgba(255,255,255,0.7)" stroke="${headOutline}" stroke-width="0.8" transform="rotate(15 ${cx - hr - size * 0.06} ${cy - size * 0.04})"/>
+      <ellipse cx="${cx - hr - size * 0.02}" cy="${cy - size * 0.10}" rx="${size * 0.07}" ry="${size * 0.10}" fill="rgba(255,255,255,0.5)" stroke="${headOutline}" stroke-width="0.6" transform="rotate(25 ${cx - hr - size * 0.02} ${cy - size * 0.10})"/>
+      <!-- Right wing -->
+      <ellipse cx="${cx + hr + size * 0.06}" cy="${cy - size * 0.04}" rx="${size * 0.10}" ry="${size * 0.14}" fill="rgba(255,255,255,0.7)" stroke="${headOutline}" stroke-width="0.8" transform="rotate(-15 ${cx + hr + size * 0.06} ${cy - size * 0.04})"/>
+      <ellipse cx="${cx + hr + size * 0.02}" cy="${cy - size * 0.10}" rx="${size * 0.07}" ry="${size * 0.10}" fill="rgba(255,255,255,0.5)" stroke="${headOutline}" stroke-width="0.6" transform="rotate(-25 ${cx + hr + size * 0.02} ${cy - size * 0.10})"/>`;
+            }
+
+            return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" fill="none" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;">
+    <g ${t}>
+      ${cupidHTML}
+      <!-- Antenna stem (tall) -->
+      <line x1="${cx}" y1="${cy - hr + 2}" x2="${cx}" y2="${ty + 4}" stroke="${sproutColor}" stroke-width="2.5" stroke-linecap="round"/>
+      ${tipHTML}
+
+      <!-- Square head with slight rounding -->
+      <rect x="${cx - hr}" y="${cy - hr}" width="${hr * 2}" height="${hr * 2}" rx="${r}" ry="${r}" fill="${headColor}" stroke="${headOutline}" stroke-width="2.5"/>
+      <!-- Highlight -->
+      <rect x="${cx - hr + 4}" y="${cy - hr + 4}" width="${hr * 0.8}" height="${hr * 0.7}" rx="${r * 0.5}" fill="${headLight}" opacity="0.35"/>
+
+      <!-- Left eye (BIG) -->
+      <ellipse cx="${cx - hr * 0.32}" cy="${cy + hr * 0.05}" rx="${size * 0.065}" ry="${size * 0.08}" fill="${eyeColor}"/>
+      <circle cx="${cx - hr * 0.38}" cy="${cy - hr * 0.02}" r="${size * 0.025}" fill="white"/>
+      <circle cx="${cx - hr * 0.28}" cy="${cy + hr * 0.12}" r="${size * 0.014}" fill="white" opacity="0.6"/>
+
+      <!-- Right eye (BIG) -->
+      <ellipse cx="${cx + hr * 0.32}" cy="${cy + hr * 0.05}" rx="${size * 0.065}" ry="${size * 0.08}" fill="${eyeColor}"/>
+      <circle cx="${cx + hr * 0.26}" cy="${cy - hr * 0.02}" r="${size * 0.025}" fill="white"/>
+      <circle cx="${cx + hr * 0.36}" cy="${cy + hr * 0.12}" r="${size * 0.014}" fill="white" opacity="0.6"/>
+
+      <!-- Smile -->
+      <path d="M ${cx - hr * 0.18} ${cy + hr * 0.38} Q ${cx} ${cy + hr * 0.52} ${cx + hr * 0.18} ${cy + hr * 0.38}" stroke="${headOutline}" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </g>
+  </svg>`;
+        }
+
+        // ===========================
+        // VARIANTS
+        // ===========================
+        const hauVariants = [
+            { headColor: '#f5e6d0', headLight: '#faf3e8', sproutColor: '#8ba65a', antennaTip: 'leaf', tipColor: '#8ba65a' },
+            { headColor: '#fce4ec', headLight: '#fff0f3', sproutColor: '#e0728a', antennaTip: 'heart', tipColor: '#ef4444' },
+            { headColor: '#e0f0ff', headLight: '#f0f8ff', sproutColor: '#60a5fa', antennaTip: 'cloud', tipColor: '#90caf9' },
+            { headColor: '#f3e5f5', headLight: '#fce4ff', sproutColor: '#9b59b6', antennaTip: 'star', tipColor: '#ffd700' },
+            { headColor: '#e8f5e9', headLight: '#f1f8f1', sproutColor: '#43a047', antennaTip: 'flower', tipColor: '#e91e63' },
+            { headColor: '#fff8e1', headLight: '#fffde7', sproutColor: '#f9a825', antennaTip: 'dot', tipColor: '#f9a825' },
+            { headColor: '#fbe9e7', headLight: '#fff3e0', sproutColor: '#e64a19', antennaTip: 'heart', tipColor: '#c94d6e' },
+            { headColor: '#e1f5fe', headLight: '#f0faff', sproutColor: '#0288d1', antennaTip: 'leaf', tipColor: '#0288d1' },
+        ];
+
+        // ===========================
+        // PARADE
+        // ===========================
+        const pt = document.getElementById('paradeTrack');
+        let ph = '';
+        for (let r = 0; r < 3; r++) {
+            hauVariants.forEach((v, i) => {
+                ph += `<div class="parade-hau" style="animation-delay:${((i + r * 3) * 0.2).toFixed(2)}s;">${hauHeadSVG({ ...v, size: 48, flip: (i + r) % 3 === 0 })}</div>`;
+            });
+        }
+        pt.innerHTML = ph;
+
+        // ===========================
+        // HERO SCENE (datamatch-inspired)
+        // Cupid haus on clouds, pixel hearts, envelopes
+        // ===========================
+        const hero = document.getElementById('heroSection');
+
+        // Pixel cloud SVG
+        function cloudSVG(w, color = '#fff') {
+            const h = w * 0.55;
+            return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" fill="none" style="image-rendering:pixelated;">
+    <ellipse cx="${w * 0.35}" cy="${h * 0.65}" rx="${w * 0.35}" ry="${h * 0.35}" fill="${color}" opacity="0.9"/>
+    <ellipse cx="${w * 0.6}" cy="${h * 0.55}" rx="${w * 0.28}" ry="${h * 0.30}" fill="${color}" opacity="0.85"/>
+    <ellipse cx="${w * 0.5}" cy="${h * 0.40}" rx="${w * 0.22}" ry="${h * 0.25}" fill="${color}" opacity="0.8"/>
+    <ellipse cx="${w * 0.75}" cy="${h * 0.70}" rx="${w * 0.20}" ry="${h * 0.25}" fill="${color}" opacity="0.75"/>
+  </svg>`;
+        }
+
+        // Pixel heart SVG
+        function pixelHeartSVG(s, color = '#e88da4') {
+            return `<svg width="${s}" height="${s}" viewBox="0 0 16 14" fill="none" style="image-rendering:pixelated;">
+    <rect x="2" y="0" width="2" height="2" fill="${color}"/><rect x="4" y="0" width="2" height="2" fill="${color}"/>
+    <rect x="8" y="0" width="2" height="2" fill="${color}"/><rect x="10" y="0" width="2" height="2" fill="${color}"/>
+    <rect x="0" y="2" width="16" height="2" fill="${color}"/>
+    <rect x="0" y="4" width="16" height="2" fill="${color}"/>
+    <rect x="2" y="6" width="12" height="2" fill="${color}"/>
+    <rect x="4" y="8" width="8" height="2" fill="${color}"/>
+    <rect x="6" y="10" width="4" height="2" fill="${color}"/>
+  </svg>`;
+        }
+
+        // Pixel envelope SVG
+        function pixelMailSVG(s) {
+            return `<svg width="${s}" height="${s * 0.7}" viewBox="0 0 24 17" fill="none" style="image-rendering:pixelated;">
+    <rect x="0" y="3" width="24" height="14" rx="1" fill="#e88da4" stroke="#7a6048" stroke-width="1.5"/>
+    <polygon points="0,3 12,11 24,3" fill="#d4637e" stroke="#7a6048" stroke-width="1"/>
+    <polygon points="0,17 12,10 24,17" fill="#b8406a" opacity="0.5"/>
+  </svg>`;
+        }
+
+        // Scene elements layout (like datamatch - cupids on clouds, floating hearts, mail)
+        const sceneEls = [
+            // Clouds
+            { type: 'cloud', x: '5%', y: '10%', w: 180, color: '#f0e0e8' },
+            { type: 'cloud', x: '60%', y: '5%', w: 220, color: '#ede0f0' },
+            { type: 'cloud', x: '80%', y: '55%', w: 140, color: '#e8e0f0' },
+            { type: 'cloud', x: '-2%', y: '65%', w: 160, color: '#f0e8e0' },
+            // Cupid haus on clouds
+            { type: 'cupid', x: '12%', y: '6%', v: { ...hauVariants[1], antennaTip: 'heart', tipColor: '#ef4444' }, sz: 52, cloudW: 100 },
+            { type: 'cupid', x: '72%', y: '3%', v: { ...hauVariants[0] }, sz: 44, cloudW: 80 },
+            { type: 'cupid', x: '85%', y: '58%', v: { ...hauVariants[3], antennaTip: 'star', tipColor: '#ffd700' }, sz: 40, cloudW: 70 },
+            { type: 'cupid', x: '2%', y: '60%', v: { ...hauVariants[4], antennaTip: 'flower', tipColor: '#e91e63' }, sz: 36, cloudW: 65 },
+            // Hearts
+            { type: 'heart', x: '25%', y: '8%', s: 28, color: '#e88da4' },
+            { type: 'heart', x: '50%', y: '75%', s: 22, color: '#d4637e' },
+            { type: 'heart', x: '88%', y: '30%', s: 20, color: '#e88da4' },
+            { type: 'heart', x: '8%', y: '42%', s: 18, color: '#c94d6e' },
+            { type: 'heart', x: '68%', y: '80%', s: 24, color: '#e88da4' },
+            { type: 'heart', x: '40%', y: '4%', s: 16, color: '#d4637e' },
+            // Mail
+            { type: 'mail', x: '30%', y: '80%', s: 32 },
+            { type: 'mail', x: '75%', y: '15%', s: 28 },
+            { type: 'mail', x: '55%', y: '88%', s: 24 },
+        ];
+
+        sceneEls.forEach((el, i) => {
+            const d = document.createElement('div');
+            d.className = 'hero-scene-el';
+
+            if (el.type === 'cloud') {
+                d.classList.add('scene-cloud');
+                d.innerHTML = cloudSVG(el.w, el.color);
+                d.style.cssText = `left:${el.x};top:${el.y};`;
+            } else if (el.type === 'cupid') {
+                d.classList.add('scene-cupid');
+                const cupidSvg = hauHeadSVG({ ...el.v, size: el.sz, cupid: true });
+                const miniCloud = cloudSVG(el.cloudW, '#f5eff5');
+                d.innerHTML = `<div style="position:relative;">
+      <div style="position:absolute;bottom:-${el.cloudW * 0.22}px;left:50%;transform:translateX(-50%);">${miniCloud}</div>
+      <div style="position:relative;z-index:1;text-align:center;">${cupidSvg}</div>
+    </div>`;
+                d.style.cssText = `left:${el.x};top:${el.y};animation-duration:${6 + i * 0.7}s;animation-delay:${i * 0.3}s;`;
+            } else if (el.type === 'heart') {
+                d.classList.add('scene-heart');
+                d.innerHTML = pixelHeartSVG(el.s, el.color);
+                d.style.cssText = `left:${el.x};top:${el.y};animation-duration:${5 + i * 0.5}s;animation-delay:${i * 0.4}s;`;
+            } else if (el.type === 'mail') {
+                d.classList.add('scene-mail');
+                d.innerHTML = pixelMailSVG(el.s);
+                d.style.cssText = `left:${el.x};top:${el.y};animation-duration:${7 + i * 0.6}s;animation-delay:${i * 0.5}s;`;
+            }
+
+            hero.insertBefore(d, hero.firstChild);
+        });
+
+        // ===========================
+        // GLOBAL HEARTS
+        // ===========================
+        const hbg = document.getElementById('heartsBg');
+        const hE = ['💕', '💗', '💌', '🩷', '💖'];
+        for (let i = 0; i < 10; i++) {
+            const h = document.createElement('div');
+            h.className = 'fh'; h.textContent = hE[i % hE.length];
+            h.style.left = (Math.random() * 100) + '%';
+            h.style.fontSize = (14 + Math.random() * 14) + 'px';
+            h.style.animationDuration = (18 + Math.random() * 22) + 's';
+            h.style.animationDelay = (Math.random() * 20) + 's';
+            hbg.appendChild(h);
+        }
+
+        // ===========================
+        // COUNTDOWN
+        // ===========================
+        function updateCD() {
+            const target = new Date('2026-02-14T18:00:00-05:00').getTime();
+            const diff = Math.max(0, target - Date.now());
+            document.getElementById('cd-d').textContent = String(Math.floor(diff / 86400000)).padStart(2, '0');
+            document.getElementById('cd-h').textContent = String(Math.floor((diff % 86400000) / 3600000)).padStart(2, '0');
+            document.getElementById('cd-m').textContent = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+            document.getElementById('cd-s').textContent = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+        }
+        updateCD(); setInterval(updateCD, 1000);
+
+        function toggleFaq(el) { el.parentElement.classList.toggle('open'); }
+        function toggleStep(el) { el.classList.toggle('open'); }
+
+        function toggleMoreFaqs() {
+            const more = document.getElementById('moreFaqs');
+            const btn = document.getElementById('showMoreBtn');
+            if (more.style.display === 'none') {
+                more.style.display = 'block';
+                btn.textContent = 'SHOW LESS';
+            } else {
+                more.style.display = 'none';
+                btn.textContent = 'SHOW MORE';
+            }
+        }
+
+        // Add small hau icons to step headers
+        const stepToggles = document.querySelectorAll('.step-toggle');
+        const stepHauVariants = [hauVariants[0], hauVariants[1], hauVariants[2], hauVariants[4]];
+        stepToggles.forEach((st, i) => {
+            const header = st.querySelector('.step-header');
+            const hauEl = document.createElement('span');
+            hauEl.style.cssText = 'flex-shrink:0;margin-left:auto;margin-right:8px;opacity:0.6;';
+            hauEl.innerHTML = hauHeadSVG({ ...stepHauVariants[i % stepHauVariants.length], size: 28 });
+            header.insertBefore(hauEl, header.querySelector('.step-arrow'));
+        });
+
+        function copyLink() {
+            navigator.clipboard?.writeText('https://haumail.world');
+            const btn = event.target;
+            const o = btn.textContent;
+            btn.textContent = 'LINK COPIED!';
+            setTimeout(() => btn.textContent = o, 2000);
+        }
+
+        const obs = new IntersectionObserver(es => {
+            es.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+    </script>
+    <!-- Survey Modal -->
+    <div id="surveyModal"
+        style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.6);backdrop-filter:blur(2px);align-items:center;justify-content:center;">
+        <div
+            style="position:relative;width:90%;max-width:640px;height:85vh;background:var(--crisp-paper);box-shadow:-4px 0 0 0 #2d2d2d,4px 0 0 0 #2d2d2d,0 -4px 0 0 #2d2d2d,0 4px 0 0 #2d2d2d;">
+            <button onclick="closeSurvey()"
+                style="position:absolute;top:-6px;right:-6px;z-index:3;width:32px;height:32px;background:#ef4444;color:white;font-family:'Press Start 2P',cursive;font-size:10px;border:none;cursor:pointer;box-shadow:-2px 0 0 0 #2d2d2d,2px 0 0 0 #2d2d2d,0 -2px 0 0 #2d2d2d,0 2px 0 0 #2d2d2d;">X</button>
+            <iframe id="surveyFrame" style="width:100%;height:100%;border:none;"
+                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script>
+        function openSurvey(e) {
+            e.preventDefault();
+            const modal = document.getElementById('surveyModal');
+            const frame = document.getElementById('surveyFrame');
+            frame.src = 'https://formshare.ai/s/2utYFrWqyu';
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        function closeSurvey() {
+            const modal = document.getElementById('surveyModal');
+            const frame = document.getElementById('surveyFrame');
+            modal.style.display = 'none';
+            frame.src = '';
+            document.body.style.overflow = '';
+        }
+        document.getElementById('surveyModal').addEventListener('click', function (e) {
+            if (e.target === this) closeSurvey();
+        });
+    </script>
+</body>
+
+</html>
