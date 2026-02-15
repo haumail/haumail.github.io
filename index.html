@@ -1116,7 +1116,7 @@
                         <div class="faq-q" onclick="toggleFaq(this)"><span>What if my match is weird/creepy?</span><span
                                 class="faq-toggle">+</span></div>
                         <div class="faq-a">If someone is being inappropriate, stop messaging them, and contact us
-                            socials@haumail.world and we'll handle it.</div>
+                            social@haumail.world and we'll handle it.</div>
                     </div>
                     <div class="faq-item">
                         <div class="faq-q" onclick="toggleFaq(this)"><span>When does the survey close?</span><span
@@ -1136,7 +1136,7 @@
                         <div class="faq-a">Message your matches! Invite your friends! Your family! Haumail isn't just
                             for Feb 14th. In fact, the whole point is to use it after Feb 14th.<br><br>We're still
                             developing Haumail, so feel free to send us feedback, feature requests, or any other ideas
-                            by contacting socials@haumail.world.</div>
+                            by contacting social@haumail.world.</div>
                     </div>
                 </div>
             </div>
@@ -1164,7 +1164,7 @@
 
     <footer class="footer">
         <p class="footer-made">Made with care 💌</p>
-        <div class="footer-links"><a href="mailto:socials@haumail.world">socials@haumail.world</a></div>
+        <div class="footer-links"><a href="mailto:social@haumail.world">social@haumail.world</a></div>
         <p class="footer-copy">&copy; 2026 Haumail.</p>
     </footer>
 
@@ -1465,24 +1465,25 @@
     <div id="surveyModal"
         style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.6);backdrop-filter:blur(2px);align-items:center;justify-content:center;">
         <div
-            style="position:relative;width:90%;max-width:640px;height:85vh;background:var(--crisp-paper);box-shadow:-4px 0 0 0 #2d2d2d,4px 0 0 0 #2d2d2d,0 -4px 0 0 #2d2d2d,0 4px 0 0 #2d2d2d;">
+            style="display:flex;flex-direction:column;justify-content:center;position:relative;width:90%;max-width:640px;height:20vh;background:var(--crisp-paper);box-shadow:-4px 0 0 0 #2d2d2d,4px 0 0 0 #2d2d2d,0 -4px 0 0 #2d2d2d,0 4px 0 0 #2d2d2d;">
             <button onclick="closeSurvey()"
                 style="position:absolute;top:-6px;right:-6px;z-index:3;width:32px;height:32px;background:#ef4444;color:white;font-family:'Press Start 2P',cursive;font-size:10px;border:none;cursor:pointer;box-shadow:-2px 0 0 0 #2d2d2d,2px 0 0 0 #2d2d2d,0 -2px 0 0 #2d2d2d,0 2px 0 0 #2d2d2d;">X</button>
-            <iframe id="surveyFrame" style="width:100%;height:100%;border:none;"
-                referrerpolicy="strict-origin-when-cross-origin" data-tally-src="https://tally.so/r/q4AYNO" title="haumail" allowfullscreen></iframe>
+            <h1 style="text-align:center;">oh no!</h1>
+            <p style="text-align:center;">you missed our matching window (closing 2/13 6pm ET).</p>
+            <p style="text-align:center;">we apologize for any inconvenience :(</p>
         </div>
     </div>
     <script>
         function openSurvey(e) {
             e.preventDefault();
             const modal = document.getElementById('surveyModal');
-            const frame = document.getElementById('surveyFrame');
+            // const frame = document.getElementById('surveyFrame');
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
         function closeSurvey() {
             const modal = document.getElementById('surveyModal');
-            const frame = document.getElementById('surveyFrame');
+            // const frame = document.getElementById('surveyFrame');
             modal.style.display = 'none';
             document.body.style.overflow = '';
         }
